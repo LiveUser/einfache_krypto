@@ -5,7 +5,7 @@ import 'package:einfache_krypto/einfache_krypto.dart';
 
 void main() {
   test('Encrypt text', () {
-    Uint8List x = Einfache_Krypto.cipher(data: 'H'.codeUnits,password: 'S');
+    List<int> x = Einfache_Krypto.cipher(data: 'H'.codeUnits,password: 'S',securityLevel: 2);
     print(String.fromCharCodes(x));
   });
 }
