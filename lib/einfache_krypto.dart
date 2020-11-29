@@ -1,5 +1,6 @@
 library einfache_krypto;
 import 'package:flutter/material.dart';
+
 //TODO: Remove all print() statements before publishing
 //Check if the number is prime
 bool isPrime(int number){
@@ -21,8 +22,7 @@ class MakePrime{
     }
     //Make it prime if it is not
     if(!isPrime(number)){
-      //Make it 2 if its less than 2
-      if(number < 2){
+      if(number <= 2){
         number = 2;
       }else{
         //Make it prime if it is not
@@ -35,43 +35,36 @@ class MakePrime{
 }
 //Generates cryptographic keys
 class CipherGen{
-  int p;
-  int q;
-  int N;
-  int phi;//Φ
+  int p = 0;
+  int q = 0;
+  int N = 0;
+  int phi = 0;//Φ
   //Encryption key
-  int e;
+  int e = 0;
   //Decryption key
   int d = 0;
-  CipherGen({@required String password,@required MakePrime securityLevel}){
-    List<int> bytes = password.codeUnits;
-    //Function for finding primes
-    if(bytes.length == 1){
-      p = MakePrime(bytes.first).primeNumber;
-      q = MakePrime(bytes.first).primeNumber;
-    }else if(bytes.length % 2 == 0){
-      int middle = (bytes.length / 2).floor();
-      //Increase by one the middle if the number of numbers is uneven
-      if(bytes.length % 2 == 1){
-        middle++;
-      }
-      //Calculate p by concatenating numbers
-      String pString = '';
-      for(int i = 0; i < middle; i++){
-        pString += bytes[i].toString();
-      }
-      //Calculate q by concatenating numbers
-      String qString = '';
-      for(int i = middle; i < bytes.length; i++){
-        qString += bytes[i].toString();
-      }
-      p = int.parse(pString);
-      q = int.parse(qString);
-      //If numbers aren't prime make them
+  CipherGen({@required int seed,@required MakePrime securityLevel}){
+    //Calculate p and q
+    String password = seed.toString();
+    if(password.length == 0 || password == null){
+      throw 'Password seed with no integers or null';
+    }else if(password.length == 1){
+      p = int.parse(password);
       p = MakePrime(p).primeNumber;
-      q = MakePrime(q).primeNumber;
+      q = p % 2 == 0? p + 1 : p + 2;
+    }else{
+      int midpoint = (password.length / 2).ceil();
+      p = MakePrime(int.parse(password.substring(0,midpoint))).primeNumber;
+      q = MakePrime(int.parse(password.substring(midpoint,password.length))).primeNumber;
+      //Make sure that p and q are never the same
+      if(p == q){
+        q = p % 2 == 0? p + 1 : p + 2;
+      }
     }
     print('p = $p \nq = $q');
+    //Find the largest value on the password
+    int largestNumber = p < q ? q : p;
+    int smallestNumber = p < q ? p : q;
     //Calculate N
     N = p * q;
     print('N = $N');
@@ -79,17 +72,8 @@ class CipherGen{
     phi = (p-1) * (q - 1);
     print('phi = $phi');
     //Calculate e(Int between 1 and phi)
-      //Find the largest value on the List
-      int largestNumber = 0;
-      bytes.forEach((number) {
-        if(largestNumber < number){
-          largestNumber = number;
-        }
-      });
     print('Largest int on the list is $largestNumber');
-    e = ((bytes.last / largestNumber) * phi).round();
-    //Make sure the number is at least 1
-    e = 1 <= e ? e : 1;
+    e = ((smallestNumber / largestNumber) * phi).floor();
     //Make e prime
     e = MakePrime(e).primeNumber;
     print('e = $e');
@@ -99,7 +83,7 @@ class CipherGen{
     while(timesFound != securityLevel.primeNumber){
       int checking = (e * d) % phi;
       //If found one equal to one add it
-      print('$e x $d % $phi = $checking');
+        //print('$e x $d % $phi = $checking');
       if(checking == 1){
         timesFound++;
       }
@@ -107,8 +91,9 @@ class CipherGen{
       if(timesFound != securityLevel.primeNumber){
         d++;
       }
-      print('$d. Found: $timesFound/${securityLevel.primeNumber}');
+        //print('$d. Found: $timesFound/${securityLevel.primeNumber}');
     }
+    print('d = $d');
     //End of key variables generation
   }
 }
@@ -117,15 +102,29 @@ class CipherGen{
 // ignore: camel_case_types
 class Einfache_Krypto {
   //Encrypts the given data using a password and security key. The bigger the security key number the safer it is but the longer it takes to compute.
-  static List<int> cipher({@required List<int> data,@required String password,@required int securityLevel}){
-    //Generate the numbers for the variables
-    CipherGen generated = CipherGen(password: password,securityLevel: MakePrime(securityLevel));
-    //Translate the password string to number
+  static List<int> cipher({@required List<int> data,@required int password,@required int securityLevel}){
     //Generate private and public keys
-    return data;
+    CipherGen generated = CipherGen(seed: password,securityLevel: MakePrime(securityLevel));
+    //Encrypt the text
+    List<int> cipheredData = [];
+    for(int i = 0;i < data.length; i++){
+      print('Cipher ${data[i]} -> ${data[i].modPow(generated.e, generated.N)}');
+      //Encrypt and add
+      cipheredData.add(data[i].modPow(generated.e, generated.N));
+    }
+    //Return the encrypted data
+    return cipheredData;
   }
-  static List<int> decipher({@required List<int> data,@required String password}){
+  static List<int> decipher({@required List<int> data,@required int password,@required int securityLevel}){
+    //Generate private and public keys
+    CipherGen generated = CipherGen(seed: password,securityLevel: MakePrime(securityLevel));
+    //Decrypt the text
+    List<int> decipheredData = [];
+    for(int i = 0;i < data.length; i++){
+      //Encrypt and add
+      decipheredData.add(data[i].modPow(generated.d, generated.N));
+    }
     //Return decrypted data
-    return data;
+    return decipheredData;
   }
 }
