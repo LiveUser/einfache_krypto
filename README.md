@@ -6,7 +6,7 @@ Hecho en 🇵🇷 por Radamés J. Valentín Reyes
 
 # API functions
 
-Note: You must always convert your data to a List<int> in order to pass it as argument. securityLevel must always be greater than or equal to one. 
+Note: You must always convert your data to a List<int> in order to pass it as argument. securityLevel must always be greater than or equal to one. To decipher content you always need to use the same password and security level with which you encrypted it.
 
 Ciphering:
 ~~~dart
@@ -51,9 +51,9 @@ List<int> y = Einfache_Krypto.decipher(data: x, password: password, securityLeve
 print('Deciphered: ${String.fromCharCodes(y)}');
 ~~~
 
-Key Generation:
+## Key Generation:
 
-Note: All of the variables shown in the eddie woo videos are available through this object.
+Note: All of the variables shown in the Eddie Woo videos are available through this object.
 
 ~~~dart
 //Generate Key pairs
@@ -63,7 +63,7 @@ print(generated.e);
 //Mod value(N variable)
 print(generated.N);
 ~~~
-Adaptive Password:
+## Adaptive Password:
 
 Note: You can use the returned password number or a number bigger that itself to guarantee that all your content can be encrypted.
 

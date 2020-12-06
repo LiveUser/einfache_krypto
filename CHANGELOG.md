@@ -1,3 +1,4 @@
-## [0.0.1] - TODO: Add release date.
+## Version 1.0.0 - December 6 2020
 
-* TODO: Describe initial release.
+* All core library functionalities added
+* Decent documentation with examples added to the README.md
