@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:optimus_prime/optimus_prime.dart';
 import 'dart:math';
 
-//TODO: Remove all print() statements before publishing
+//Remove all //print() statements before publishing
 //Generates cryptographic keys
 class CipherGen{
   int p = 0;
@@ -37,18 +37,18 @@ class CipherGen{
         q = OptimusPrime.primeAfter(q);
       }
     }
-    print('p = $p \nq = $q');
+    //print('p = $p \nq = $q');
     //Find the largest value on the password
     int largestNumber = p < q ? q : p;
     int smallestNumber = p < q ? p : q;
     //Calculate N
     N = p * q;
-    print('N = $N');
+    //print('N = $N');
     //Calculate phi Φ
     phi = (p-1) * (q - 1);
-    print('phi = $phi');
+    //print('phi = $phi');
     //Calculate e(Int between 1 and phi)
-    print('Largest int on the list is $largestNumber');
+    //print('Largest int on the list is $largestNumber');
     //Make sure that e is coprime with N and phi
     List<int> possibleE = [];
     for(int i = 1; i <= phi; i++){
@@ -64,14 +64,14 @@ class CipherGen{
     }
     int whichPosition = ((smallestNumber / largestNumber) * possibleE.length).floor();
     e = possibleE[whichPosition];
-    print('e = $e');
+    //print('e = $e');
     //Choose a d
       //Find the number n time where e * d (mod phi) == 1
     int timesFound = 0;
     while(timesFound != securityLevel){
       int checking = (e * d) % phi;
       //If found one equal to one add it
-        //print('$e x $d % $phi = $checking');
+        ////print('$e x $d % $phi = $checking');
       if(checking == 1){
         timesFound++;
       }
@@ -79,9 +79,9 @@ class CipherGen{
       if(timesFound != securityLevel){
         d++;
       }
-        //print('$d. Found: $timesFound/${securityLevel.primeNumber}');
+        ////print('$d. Found: $timesFound/${securityLevel.primeNumber}');
     }
-    print('d = $d');
+    //print('d = $d');
     //End of key variables generation
   }
 }
@@ -138,7 +138,7 @@ class Einfache_Krypto {
         factors.add(i);
       }
     }
-    print('Factors: $factors');
+    //print('Factors: $factors');
     //Pick a random factor
     int p = factors[Random().nextInt(factors.length)];
     //Find the other number with whi
