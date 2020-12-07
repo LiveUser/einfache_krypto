@@ -138,14 +138,21 @@ class Einfache_Krypto {
         factors.add(i);
       }
     }
-    //print('Factors: $factors');
+    //print('Biggest: $biggestInteger: $factors');
     //Pick a random factor
-    int p = factors[Random().nextInt(factors.length)];
-    //Find the other number with whi
-    int q = (biggestInteger / p).round();
+    int p;
+    int q;
+    if(factors.length != 0){
+        //Length -1 to avoid range error
+      p = factors[Random().nextInt(factors.length - 1)];
+      //Find the other number with whi
+      q = (biggestInteger / p).round();
+    }else{
+      p = biggestInteger;
+      q = Random().nextInt(9);
+    }
     String concatenatedPQ = '$p$q';
     int password = int.parse(concatenatedPQ);
     return password;
   }
 }
-//TODO: You need a larger number as password. RSA doeesn\'t work if the generated modulo(variable N) is smaller than the number you are trying to encrypt

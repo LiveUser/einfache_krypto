@@ -29,7 +29,7 @@ void main() {
     }
   });
   test('Try the adaptive password generation', (){
-    List<int> data = 'Hello Cyphered World from Puerto Rico'.codeUnits;
+    List<int> data = 'a'.codeUnits;
     int password = Einfache_Krypto.adaptivePasswordGeneration(data);
     List<int> encrypted = Einfache_Krypto.cipher(data: data, password: password, securityLevel: 2);
     List<int> decrypted = Einfache_Krypto.decipher(data: encrypted, password: password, securityLevel: 2);
