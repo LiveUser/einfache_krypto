@@ -30,9 +30,19 @@ Generates a password that adapts to the data so that it can completely cypher it
 ~~~dart
 Einfache_Krypto.adaptivePasswordGeneration(data: myData);//Returns the password as an int
 ~~~
+Asymmetric Encryption:
+
+~~~dart
+Einfache_Krypto.asymmetricCipher(data: myData, publicKey: publicKey, modulo: modulo);
+~~~
+Asymmetric Decryption:
+~~~dart
+Einfache_Krypto.asymmetricDecipher(data: encryptedData, privateKey: privateKey, modulo: modulo);
+~~~
+
 # Library Use Example
 
-## Encryption and Decryption Sample
+## Symmetric Encryption and Decryption Sample
 
 ~~~dart
 //Define a password
@@ -75,6 +85,20 @@ List<int> decrypted = Einfache_Krypto.decipher(data: encrypted, password: passwo
 print('Generated adaptive password is "$password"');
 print('Decrypted test: ${String.fromCharCodes(decrypted)}');
 ~~~
+## Asymmetric Encryption Sample:
+
+Note: You can use your previously generated private and public keys with this methods. Using CipherGen() to generate the keys is completely unnecessary.
+
+~~~dart
+List<int> myData = 'Hallo Freunde'.codeUnits;
+print('Original: ${String.fromCharCodes(myData)}');
+CipherGen generatedKeys = CipherGen(seed: Einfache_Krypto.adaptivePasswordGeneration(myData),securityLevel: 4);
+List<int> encrypted = Einfache_Krypto.asymmetricCipher(data: myData, publicKey: generatedKeys.e, modulo: generatedKeys.N);
+List<int> decrypted = Einfache_Krypto.asymmetricDecipher(data: encrypted, privateKey: generatedKeys.d, modulo: generatedKeys.N);
+print('Asymetric decryption result: ${String.fromCharCodes(decrypted)}');
+~~~
+
+
 
 ## References
 I was able to understand the RSA method and create this library thanks to this marvelous learning resource. Check out eddie woo's YouTube channel.

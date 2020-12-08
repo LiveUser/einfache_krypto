@@ -62,7 +62,7 @@ class CipherGen{
     if(possibleE.length == 0){
       throw 'Password seed is too small. Pick a bigger number';
     }
-    int whichPosition = ((smallestNumber / largestNumber) * possibleE.length).floor();
+    int whichPosition = ((smallestNumber / largestNumber) * (possibleE.length - 1)).floor();
     e = possibleE[whichPosition];
     //print('e = $e');
     //Choose a d
@@ -89,7 +89,7 @@ class CipherGen{
 /// Cryptographic Library. API Functions.
 // ignore: camel_case_types
 class Einfache_Krypto {
-  //Encrypts the given data using a password and security key. The bigger the security key number the safer it is but the longer it takes to compute.
+  ///Encrypts the given data using a password and security key. The bigger the security key number the safer it is but the longer it takes to compute.
   static List<int> cipher({@required List<int> data,@required int password,@required int securityLevel}){
     //Generate private and public keys
     CipherGen generated = CipherGen(seed: password,securityLevel: securityLevel);
@@ -106,6 +106,7 @@ class Einfache_Krypto {
     //Return the encrypted data
     return cipheredData;
   }
+  ///Decrypts the given data using a password and security key. The bigger the security key number the safer it is but the longer it takes to compute.
   static List<int> decipher({@required List<int> data,@required int password,@required int securityLevel}){
     //Generate private and public keys
     CipherGen generated = CipherGen(seed: password,securityLevel: securityLevel);
@@ -122,7 +123,7 @@ class Einfache_Krypto {
     //Return decrypted data
     return decipheredData;
   }
-  //Generate a password capable of cyphering your data to avoid getting any thrown errors
+  ///Generate a password capable of cyphering your data to avoid getting any thrown errors
   static int adaptivePasswordGeneration(List<int> data){
     int biggestInteger = 0;
     data.forEach((thisNumber) {
@@ -154,5 +155,34 @@ class Einfache_Krypto {
     String concatenatedPQ = '$p$q';
     int password = int.parse(concatenatedPQ);
     return password;
+  }
+  ///Encrypt your data without handing a shared encryption/decryption key or generation seed, which is the basic asymetric encryption purpose.
+  static List<int> asymmetricCipher({@required List<int> data,@required int publicKey,@required int modulo}){
+    List<int> cipheredData = [];
+    for(int i = 0;i < data.length; i++){
+      if(data[i] <= modulo){
+        //Encrypt and add
+        cipheredData.add(data[i].modPow(publicKey, modulo));
+      }else{
+        throw 'Password seed generated a small modulo(N value). You have to pick a bigger password int.';
+      }
+    }
+    //Return the encrypted data
+    return cipheredData;
+  }
+  ///Decrypt your data without handing the private key or generation seeds to decrypt it, which is the basic asymetric encryption purpose.
+  static List<int> asymmetricDecipher({@required List<int> data,@required int privateKey,@required int modulo}){
+    //Decrypt the data
+    List<int> decipheredData = [];
+    for(int i = 0;i < data.length; i++){
+      if(data[i] <= modulo){
+        //Encrypt and add
+        decipheredData.add(data[i].modPow(privateKey, modulo));
+      }else{
+        throw 'Password seed generated a small modulo(N value). You have to pick a bigger password int.';
+      }
+    }
+    //Return decrypted data
+    return decipheredData;
   }
 }

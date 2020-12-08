@@ -1,3 +1,6 @@
+## Version 1.0.1+1 - December 7 2020
+* Added methods for asymetric encryption which is the core purpose of RSA method.
+
 ## Version 1.0.0+3 - December 6 2020
 * Fix for adaptivePasswordGeneration for when there are no possible factors for generating the password using my previous method. To prevent throwing an unecessary error for which this function was mainly created.
 

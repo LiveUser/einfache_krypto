@@ -36,4 +36,12 @@ void main() {
     print('Generated adaptive password is "$password"');
     print('Decrypted test: ${String.fromCharCodes(decrypted)}');
   });
+  test('Asymetric functions test', (){
+    List<int> myData = 'Hallo Freunde'.codeUnits;
+    print('Original: ${String.fromCharCodes(myData)}');
+    CipherGen generatedKeys = CipherGen(seed: Einfache_Krypto.adaptivePasswordGeneration(myData),securityLevel: 4);
+    List<int> encrypted = Einfache_Krypto.asymmetricCipher(data: myData, publicKey: generatedKeys.e, modulo: generatedKeys.N);
+    List<int> decrypted = Einfache_Krypto.asymmetricDecipher(data: encrypted, privateKey: generatedKeys.d, modulo: generatedKeys.N);
+    print('Asymetric decryption result: ${String.fromCharCodes(decrypted)}');
+  });
 }
