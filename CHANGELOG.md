@@ -1,3 +1,5 @@
+## Version 1.0.1+2 - January 15 2021
+* Change the import from material to meta to enable the use of @required keyword
 ## Version 1.0.1+1 - December 7 2020
 * Added methods for asymetric encryption which is the core purpose of RSA method.
 

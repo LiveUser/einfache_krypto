@@ -1,5 +1,5 @@
 library einfache_krypto;
-import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:optimus_prime/optimus_prime.dart';
 import 'dart:math';
 
