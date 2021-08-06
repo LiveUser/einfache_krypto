@@ -18,16 +18,6 @@ void main() {
       print(err);
     }
   });
-  test('Should throw the small modulo error', (){
-    try{
-      int password = 15;
-      List<int> data = [1034];
-      print('Original: $data');
-      Einfache_Krypto.cipher(data: data,password: password,securityLevel: 2);
-    }catch(err){
-      print(err);
-    }
-  });
   test('Try the adaptive password generation', (){
     List<int> data = 'a'.codeUnits;
     int password = Einfache_Krypto.adaptivePasswordGeneration(data);

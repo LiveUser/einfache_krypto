@@ -1,9 +1,17 @@
 library einfache_krypto;
 import 'package:meta/meta.dart';
 import 'package:optimus_prime/optimus_prime.dart';
-import 'dart:math';
 
-//Remove all //print() statements before publishing
+///A collection of all the errors that can be thrown by this library
+enum CipherError{
+  ///Try a bigger password capable of ciphering all of the content
+  smallPassword,
+  ///No password passed as parameter
+  noPassword,
+  ///Password is too big for the machine to perform the required computations
+  bigPassword,
+}
+
 //Generates cryptographic keys
 class CipherGen{
   int p = 0;
@@ -16,9 +24,9 @@ class CipherGen{
   int d = 0;
   CipherGen({@required int seed,@required int securityLevel}){
     //Calculate p and q
-    String password = seed.toString();
+    String password = seed == null ? null : seed.toString();
     if(password.length == 0 || password == null){
-      throw 'Password seed with no integers or null';
+      throw CipherError.noPassword;
     }else if(password.length == 1){
       p = int.parse(password);
       p = p.isPrime()?p:OptimusPrime.primeAfter(p);
@@ -60,7 +68,7 @@ class CipherGen{
     }
     //There are no numbers that can take the value of the variable e. None within range meet the criteria.
     if(possibleE.length == 0){
-      throw 'Password seed is too small. Pick a bigger number';
+      throw CipherError.smallPassword;
     }
     int whichPosition = ((smallestNumber / largestNumber) * (possibleE.length - 1)).floor();
     e = possibleE[whichPosition];
@@ -99,10 +107,14 @@ class Einfache_Krypto {
       if(data[i] <= generated.N){
         //Encrypt and add
         cipheredData.add(data[i].modPow(generated.e, generated.N));
+        //Check that the computer was able to compute, operations that are to big are registered as infinite
+        if(cipheredData[i] == double.infinity){
+          throw CipherError.bigPassword;
+        }
       }else{
-        throw 'Password seed generated a small modulo(N value). You have to pick a bigger password int.';
+        throw CipherError.smallPassword;
       }
-    }
+    }    
     //Return the encrypted data
     return cipheredData;
   }
@@ -113,17 +125,13 @@ class Einfache_Krypto {
     //Decrypt the data
     List<int> decipheredData = [];
     for(int i = 0;i < data.length; i++){
-      if(data[i] <= generated.N){
-        //Encrypt and add
-        decipheredData.add(data[i].modPow(generated.d, generated.N));
-      }else{
-        throw 'Password seed generated a small modulo(N value). You have to pick a bigger password int.';
-      }
+      //Decrypt and add
+      decipheredData.add(data[i].modPow(generated.d, generated.N));
     }
     //Return decrypted data
     return decipheredData;
   }
-  ///Generate a password capable of cyphering your data to avoid getting any thrown errors
+  ///Generate a password capable of cyphering your data to avoid throwing errors. All numbers smaller than the generated will fail to cipher all the data
   static int adaptivePasswordGeneration(List<int> data){
     int biggestInteger = 0;
     data.forEach((thisNumber) {
@@ -131,27 +139,9 @@ class Einfache_Krypto {
         biggestInteger = thisNumber;
       }
     });
-    //Calculate all of the factors
-    List<int> factors = [];
-    int midpoint = (biggestInteger / 2).floor();
-    for(int i = 1; i < midpoint; i++){
-      if(biggestInteger % i == 0 && i.isPrime()){
-        factors.add(i);
-      }
-    }
-    //print('Biggest: $biggestInteger: $factors');
     //Pick a random factor
-    int p;
-    int q;
-    if(factors.length != 0){
-        //Length -1 to avoid range error
-      p = factors[Random().nextInt(factors.length - 1)];
-      //Find the other number with whi
-      q = (biggestInteger / p).round();
-    }else{
-      p = biggestInteger;
-      q = Random().nextInt(9);
-    }
+    int p = biggestInteger;
+    int q = 1;
     String concatenatedPQ = '$p$q';
     int password = int.parse(concatenatedPQ);
     return password;
@@ -163,8 +153,11 @@ class Einfache_Krypto {
       if(data[i] <= modulo){
         //Encrypt and add
         cipheredData.add(data[i].modPow(publicKey, modulo));
+        if(cipheredData[i] == double.infinity){
+          throw CipherError.bigPassword;
+        }
       }else{
-        throw 'Password seed generated a small modulo(N value). You have to pick a bigger password int.';
+        throw CipherError.smallPassword;
       }
     }
     //Return the encrypted data
@@ -175,12 +168,8 @@ class Einfache_Krypto {
     //Decrypt the data
     List<int> decipheredData = [];
     for(int i = 0;i < data.length; i++){
-      if(data[i] <= modulo){
-        //Encrypt and add
-        decipheredData.add(data[i].modPow(privateKey, modulo));
-      }else{
-        throw 'Password seed generated a small modulo(N value). You have to pick a bigger password int.';
-      }
+      //Decrypt and add
+      decipheredData.add(data[i].modPow(privateKey, modulo));
     }
     //Return decrypted data
     return decipheredData;

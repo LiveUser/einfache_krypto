@@ -110,8 +110,8 @@ I was able to understand the RSA method and create this library thanks to this m
 
 Note: Take into account that all data is always read by the program as numbers. Your password is a seed for all of the RSA variables that need to be generated.
 
-- You cannot encrypt a number greater than the modulo. Modulo is generated on the background using your password.
+- You cannot encrypt a number greater than the modulo. Modulo is generated on the background using your password(seed).
   - [Explanaintion on this link](https://crypto.stackexchange.com/questions/3798/why-rsa-cant-handle-numbers-above-76/3800#:~:text=By definition you cannot encrypt,modulo n which loses information.&text=So with your n%3D77,equal in Z%2FnZ.)
 - If the password is too small. The range to pick a number for the variable e may be so small that it may not contain any  number that meets the necessary criteria to use RSA encryption. Example: using 12 for the password parameter will throw you an error using this library.
-- Using as password extremely big  numbers may generate numbers that are too big for your computer/device or client's computer/device to handle, because RSA relies on raising the numbers they will grow at exponential levels. Note: There is no implementation on this library to detect and throw such error.
+- Using as password extremely big  numbers may generate numbers that are too big for your computer/device or client's computer/device to handle, because RSA relies on raising the numbers they will grow at exponential levels which means that your device may not be able to perform the necessary computation.
 

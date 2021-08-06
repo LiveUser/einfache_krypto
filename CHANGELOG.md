@@ -1,5 +1,12 @@
+## Version 1.0.2+1 - August 5 2021
+* Added an enum called CipherError which contains the thrown errors
+* adaptivePasswordGeneration was generating passwords that where to small and the algorithm had unnecessary recursion, both errors were fixed.
+* The software now throws an error when ciphering content with a password that is too big for the device to compute(throws CipherError.bigPassword)
+* Switched my Improvised License for the MIT License on the License file
+
 ## Version 1.0.1+2 - January 15 2021
 * Change the import from material to meta to enable the use of @required keyword
+
 ## Version 1.0.1+1 - December 7 2020
 * Added methods for asymetric encryption which is the core purpose of RSA method.
 

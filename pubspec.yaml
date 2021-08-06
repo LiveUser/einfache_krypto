@@ -1,6 +1,6 @@
 name: einfache_krypto
 description: RSA Cryptography library with ease of use at its core.
-version: 1.0.1+2
+version: 1.0.2+1
 author:
 homepage:
 
@@ -11,7 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  optimus_prime: ^0.0.1
+  optimus_prime: ^0.0.1+3
+  meta:
 
 dev_dependencies:
   flutter_test:
