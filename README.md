@@ -40,6 +40,19 @@ Asymmetric Decryption:
 Einfache_Krypto.asymmetricDecipher(data: encryptedData, privateKey: privateKey, modulo: modulo);
 ~~~
 
+Catching errors
+~~~dart
+try{
+  CipherGen(seed: 12,securityLevel: 12);
+}catch(err){
+  if(err == CipherError.bigPassword){
+      //Do this
+  }else{
+      //Do that
+  }
+}
+~~~
+
 # Library Use Example
 
 ## Symmetric Encryption and Decryption Sample
