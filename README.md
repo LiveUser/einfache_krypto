@@ -25,7 +25,7 @@ CipherGen(seed: password,securityLevel: securityLevel);
 ~~~
 Adaptable password generation:
 
-Generates a password that adapts to the data so that it can completely cypher it by generating a password that avoids getting problems where data values are larger than the modulo mentioned in the technical limitations section.
+Generates a password that adapts to the data so that it can completely cypher it by generating a password that avoids getting problems where data values are larger than the modulo mentioned in the technical limitations section. Its the smallest number that can be used as password to cipher successfully the data.
 
 ~~~dart
 Einfache_Krypto.adaptivePasswordGeneration(data: myData);//Returns the password as an int
@@ -43,8 +43,10 @@ Einfache_Krypto.asymmetricDecipher(data: encryptedData, privateKey: privateKey, 
 Catching errors
 ~~~dart
 try{
+  //Library operations go here
   CipherGen(seed: 12,securityLevel: 12);
 }catch(err){
+   //Error handling goes here
   if(err == CipherError.bigPassword){
       //Do this
   }else{

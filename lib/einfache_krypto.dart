@@ -142,7 +142,15 @@ class Einfache_Krypto {
     //Pick a random factor
     int p = biggestInteger;
     int q = 1;
-    String concatenatedPQ = '$p$q';
+    //Zeros to make the password valid when it's split in the middle by CipherGen
+    String middleZeroes = "";
+    int pLength = p.toString().length; 
+    if(pLength > 0){
+      for(int i = 0; i < (pLength - 1); i++){
+        middleZeroes += "0";
+      }
+    }
+    String concatenatedPQ = '$p$middleZeroes$q';
     int password = int.parse(concatenatedPQ);
     return password;
   }

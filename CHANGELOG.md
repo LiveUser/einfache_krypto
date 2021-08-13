@@ -1,4 +1,8 @@
+## Version 1.0.2+1 - August 13 2021
+* Yet another attempt to solve the issue with adaptivePasswordGeneration not generating a password capable of ciphering all of the content
+
 ## Version 1.0.2+1 - August 5 2021
+
 * Added an enum called CipherError which contains the thrown errors
 * adaptivePasswordGeneration was generating passwords that where to small and the algorithm had unnecessary recursion, both errors were fixed.
 * The software now throws an error when ciphering content with a password that is too big for the device to compute(throws CipherError.bigPassword)
