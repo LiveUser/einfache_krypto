@@ -1,3 +1,11 @@
+## Version 1.0.3+2 - September 21 2021
+* Switched the while loop used for finding the decryption key with the formula e.modInverse(phi). Previous attempts had failed results and this solution appears to work. 
+* Stopped filtering out the non prime numbers from the possible e values. All of the previous versions of this library allowed only prime numbers to be possible encryption key values.
+* Removed the securityLevel and the dInstance arguments due to finding that the method I used previously did not work due to a misinterpretation of the method(my bad🤣)
+
+## Version 1.0.3+1 - September 1 2021
+* Added the AdvancedCipherGen class to provide another way for creating RSA keys in order to give the end-user a more granular control over key generation
+
 ## Version 1.0.2+1 - August 13 2021
 * Yet another attempt to solve the issue with adaptivePasswordGeneration not generating a password capable of ciphering all of the content
 

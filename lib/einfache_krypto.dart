@@ -10,9 +10,13 @@ enum CipherError{
   noPassword,
   ///Password is too big for the machine to perform the required computations
   bigPassword,
+  ///eIndex is out of range
+  eOutOfRange,
+  ///dIndex is out of range. dIndex must be equal to or greater than 1
+  dOutOfRange,
 }
 
-//Generates cryptographic keys
+///Generates cryptographic keys using a more simplified, predictable manner
 class CipherGen{
   int p = 0;
   int q = 0;
@@ -22,7 +26,7 @@ class CipherGen{
   int e = 0;
   //Decryption key
   int d = 0;
-  CipherGen({@required int seed,@required int securityLevel}){
+  CipherGen({@required int seed}){
     //Calculate p and q
     String password = seed == null ? null : seed.toString();
     if(password.length == 0 || password == null){
@@ -59,11 +63,9 @@ class CipherGen{
     //print('Largest int on the list is $largestNumber');
     //Make sure that e is coprime with N and phi
     List<int> possibleE = [];
-    for(int i = 1; i <= phi; i++){
+    for(int i = 2; i < phi; i++){
       if(i.coprimeWith(phi) && i.coprimeWith(N)){
-        if(i.isPrime()){
-          possibleE.add(i);
-        }
+        possibleE.add(i);
       }
     }
     //There are no numbers that can take the value of the variable e. None within range meet the criteria.
@@ -73,24 +75,73 @@ class CipherGen{
     int whichPosition = ((smallestNumber / largestNumber) * (possibleE.length - 1)).floor();
     e = possibleE[whichPosition];
     //print('e = $e');
-    //Choose a d
+    //TODO:Choose a d
       //Find the number n time where e * d (mod phi) == 1
-    int timesFound = 0;
-    while(timesFound != securityLevel){
-      int checking = (e * d) % phi;
-      //If found one equal to one add it
-        ////print('$e x $d % $phi = $checking');
-      if(checking == 1){
-        timesFound++;
-      }
-      //Add only if I have to keep iterating
-      if(timesFound != securityLevel){
-        d++;
-      }
-        ////print('$d. Found: $timesFound/${securityLevel.primeNumber}');
-    }
+    this.d = e.modInverse(phi);
     //print('d = $d');
     //End of key variables generation
+  }
+}
+///Advanced more secure key generation
+class AdvancedCipherGen{
+  int p = 0;
+  int q = 0;
+  int N = 0;
+  int phi = 0;//Φ
+  //Encryption key
+  int e = 0;
+  //Decryption key
+  int d = 0;
+  //Numbers that could take the value of e
+  List<int> _possibleE = [];
+  ///Sets p and q variables. Makes them different prime numbers and generates the necessary data for the next step.
+  List<int> step1({
+    @required int p,
+    @required int q,
+  }){
+    //Make the numbers prime if they are not and save them internally
+    if(p.isPrime()){
+      this.p = p;
+    }else{
+      this.p = OptimusPrime.primeAfter(p);
+    }
+    if(q.isPrime()){
+      this.q = q;
+    }else{
+      this.q = OptimusPrime.primeAfter(q);
+    }
+    //Make sure that p and q are not the same
+    if(this.p == this.q){
+      this.q = OptimusPrime.primeAfter(this.q);
+    }
+    //Calculate N
+    this.N = p * q;
+    //Calculate Φ(N)
+    this.phi = (this.p - 1) * (this.q - 1);
+    //Empty the possible e list
+    _possibleE = [];
+    //Find and save possible values for e
+    for(int i = 2; i < phi; i++){
+      if(i.coprimeWith(phi) && i.coprimeWith(N)){
+        _possibleE.add(i);
+      }
+    }
+    //Return the possible values for e
+    return _possibleE;
+  }
+  ///Generates the decryption number
+  void step2({
+    ///Index of the chosen possible e value
+    @required int eIndex,
+  }){
+    //Throw an error if the index is out of range
+    if( eIndex < 0 || _possibleE.length <= eIndex){
+      throw CipherError.eOutOfRange;
+    }
+    //Assign e
+    this.e = _possibleE[eIndex];
+    //Find d and assign it
+    this.d = e.modInverse(phi);
   }
 }
 
@@ -98,9 +149,9 @@ class CipherGen{
 // ignore: camel_case_types
 class Einfache_Krypto {
   ///Encrypts the given data using a password and security key. The bigger the security key number the safer it is but the longer it takes to compute.
-  static List<int> cipher({@required List<int> data,@required int password,@required int securityLevel}){
+  static List<int> cipher({@required List<int> data,@required int password}){
     //Generate private and public keys
-    CipherGen generated = CipherGen(seed: password,securityLevel: securityLevel);
+    CipherGen generated = CipherGen(seed: password);
     //Encrypt the data
     List<int> cipheredData = [];
     for(int i = 0;i < data.length; i++){
@@ -119,9 +170,9 @@ class Einfache_Krypto {
     return cipheredData;
   }
   ///Decrypts the given data using a password and security key. The bigger the security key number the safer it is but the longer it takes to compute.
-  static List<int> decipher({@required List<int> data,@required int password,@required int securityLevel}){
+  static List<int> decipher({@required List<int> data,@required int password}){
     //Generate private and public keys
-    CipherGen generated = CipherGen(seed: password,securityLevel: securityLevel);
+    CipherGen generated = CipherGen(seed: password);
     //Decrypt the data
     List<int> decipheredData = [];
     for(int i = 0;i < data.length; i++){
