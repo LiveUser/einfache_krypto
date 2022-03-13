@@ -4,6 +4,10 @@ RSA Cryptography library with ease of use at its core.
 
 Hecho en 🇵🇷 por Radamés J. Valentín Reyes
 
+# Important notifications
+
+- Do not use any version before Version 1.0.4+2 because there were bugs in them and a lot has changed since.
+
 # API functions
 
 Note: You must always convert your data to a List<int> in order to pass it as argument. securityLevel must always be greater than or equal to one. To decipher content you always need to use the same password and security level with which you encrypted it.
@@ -21,7 +25,7 @@ Key Generation:
 Returns an object with all of the RSA required variable values. You can access such values using the dot notation on the object.
 
 ~~~dart
-CipherGen(seed: password,securityLevel: securityLevel);
+CipherGen(seed: password);
 ~~~
 Adaptable password generation:
 
@@ -156,7 +160,7 @@ Note: You can use your previously generated private and public keys with this me
 ~~~dart
 List<int> myData = 'Hallo Freunde'.codeUnits;
 print('Original: ${String.fromCharCodes(myData)}');
-CipherGen generatedKeys = CipherGen(seed: Einfache_Krypto.adaptivePasswordGeneration(myData),securityLevel: 4);
+CipherGen generatedKeys = CipherGen(seed: Einfache_Krypto.adaptivePasswordGeneration(myData));
 List<int> encrypted = Einfache_Krypto.asymmetricCipher(data: myData, publicKey: generatedKeys.e, modulo: generatedKeys.N);
 List<int> decrypted = Einfache_Krypto.asymmetricDecipher(data: encrypted, privateKey: generatedKeys.d, modulo: generatedKeys.N);
 print('Asymetric decryption result: ${String.fromCharCodes(decrypted)}');
@@ -180,4 +184,5 @@ Note: Take into account that all data is always read by the program as numbers. 
   - [Explanaintion on this link](https://crypto.stackexchange.com/questions/3798/why-rsa-cant-handle-numbers-above-76/3800#:~:text=By definition you cannot encrypt,modulo n which loses information.&text=So with your n%3D77,equal in Z%2FnZ.)
 - If the password is too small. The range to pick a number for the variable e may be so small that it may not contain any  number that meets the necessary criteria to use RSA encryption. Example: using 12 for the password parameter on CipherGen will throw you an error using this library.
 - Using as password extremely big  numbers may generate numbers that are too big for your computer/device or client's computer/device to handle, because RSA relies on raising the numbers they will grow exponentially which means that your device may not be able to perform the necessary computation. In such case the library will throw an error.
+- Even though the RSA cryptography method requires you to provide two prime numbers for p and q this library takes care of converting any input into prime numbers so that you don't have to care about that(any integer is a valid input).
 

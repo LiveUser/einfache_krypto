@@ -1,4 +1,17 @@
+## Version 1.0.4+2 - September 29 2021
+* Added null safety
+* Updated yet again Optimus Prime
+## Version 1.0.4+1 - September 28 2021
+* Updated the OptimusPrime version(the library for finding primes in which this library depends on)
+## Version 1.0.3+3 - September 23 2021
+* Switched the .floor() to .round() on the CipherGen class
+* Added a notice about the changes stated above
+* added the get keyword to the variables stored on the CipherGen and AdvancedCipherGen class to prevent people from setting values. Only getting the value works now.
+* Reviewed the libraries created by myself that this project depends on to verify that they were working properly
+* Used different variable names(on the CipherGen and AdvancedCipherGen classes(invisible to the library user)) due to the fact that using this.p and this.q as object properties and using the parameter names p and q on a function inside the classes created a name conflict that resulted in the program calculating things the wrong way even though the program was written correctly and employed the use of this keyword to attempt to differentiate between them
+
 ## Version 1.0.3+2 - September 21 2021
+
 * Switched the while loop used for finding the decryption key with the formula e.modInverse(phi). Previous attempts had failed results and this solution appears to work. 
 * Stopped filtering out the non prime numbers from the possible e values. All of the previous versions of this library allowed only prime numbers to be possible encryption key values.
 * Removed the securityLevel and the dInstance arguments due to finding that the method I used previously did not work due to a misinterpretation of the method(my bad🤣)

@@ -40,7 +40,7 @@ void main() {
   test('Asymetric functions test', (){
     List<int> myData = 'Hallo Freunde'.codeUnits;
     print('Original: ${String.fromCharCodes(myData)}');
-    CipherGen generatedKeys = CipherGen(seed: Einfache_Krypto.adaptivePasswordGeneration(myData));
+    CipherGen generatedKeys = CipherGen(seed: 21513);
     List<int> encrypted = Einfache_Krypto.asymmetricCipher(data: myData, publicKey: generatedKeys.e, modulo: generatedKeys.N);
     print("Encrypted: ${String.fromCharCodes(encrypted)}");
     List<int> decrypted = Einfache_Krypto.asymmetricDecipher(data: encrypted, privateKey: generatedKeys.d, modulo: generatedKeys.N);
@@ -51,7 +51,7 @@ void main() {
     //Save the class in a variable
     AdvancedCipherGen key = AdvancedCipherGen();
     //Perform the first step to generate the possible encryption key values for the given p q
-    List<int> possibleE = key.step1(p: 293, q: 35);
+    List<int> possibleE = key.step1(p: 6, q: 97);
     print("Possible e:");
     print(possibleE);
     //Perform second step
@@ -61,6 +61,7 @@ void main() {
     print("Phi(N): ${key.phi}");
     print("Modulo: ${key.N}");
     List<int> myData = 'Hallo Freunde'.codeUnits;
+    print("Minimum password required = ${Einfache_Krypto.adaptivePasswordGeneration(myData)}");
     print('Original: ${String.fromCharCodes(myData)}');
     List<int> encrypted = Einfache_Krypto.asymmetricCipher(data: myData, publicKey: key.e, modulo: key.N);
     print("Encrypted: ${String.fromCharCodes(encrypted)}");
