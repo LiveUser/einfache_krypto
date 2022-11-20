@@ -1,13 +1,13 @@
 name: einfache_krypto
 description: RSA Cryptography library with ease of use at its core.
-version: 1.0.5+3
+version: 1.0.6+4
 homepage:
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  optimus_prime: ^0.0.2+2
+  optimus_prime: 0.0.3+3
 
 dev_dependencies:
   test:
