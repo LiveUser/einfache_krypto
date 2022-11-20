@@ -1,3 +1,5 @@
+## Version 1.0.5+3 - November 20 2022
+* Removed dependency on flutter
 ## Version 1.0.4+2 - September 29 2021
 * Added null safety
 * Updated yet again Optimus Prime

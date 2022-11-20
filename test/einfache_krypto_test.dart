@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:einfache_krypto/einfache_krypto.dart';
 
 void main() {
